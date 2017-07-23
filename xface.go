@@ -2,7 +2,6 @@ package faces
 
 import (
 	//b64 "encoding/base64"
-	//"fmt"
 	"math"
 	"regexp"
 	"strings"
@@ -564,19 +563,25 @@ func PNGFaceURL (xface []int) {
 }
 
 // output a PNG string, Base64 encoded (basically, javascript btoa())
-func getBase64 (s string) string {
+func DoBase64 (s string) string {
 	var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 	var c1, c2, c3 rune
 	var e1, e2, e3, e4 uint
 	var l = len([]rune(s))
 	var r = ""
-
-	for i := 0; i < l-1; i+=3 {
+	var i int
+	for i=0; i < l; i+=3 {
 		c1 = []rune(s)[i]
 		e1 = uint(c1) >> 2
-		c2 = []rune(s)[i+1]
-		e2 = ((uint(c1) & 3) << 4) | (uint(c2) >> 4)
-		c3 = []rune(s)[i+2]
+		if i < l-1 {
+			c2 = []rune(s)[i+1]
+			e2 = ((uint(c1) & 3) << 4) | (uint(c2) >> 4)
+		} else {
+			e2 = ((uint(c1) & 3) << 4)
+		}
+		if i < l-1 {
+			c3 = []rune(s)[i+2]
+		}
 		if (l < i+2) {
 			e3 = 64
 		} else {
@@ -589,6 +594,7 @@ func getBase64 (s string) string {
 		}
 		r+= string([]rune(ch)[e1]) + string([]rune(ch)[e2]) + string([]rune(ch)[e3]) + string([]rune(ch)[e4])
 	}
+
 	return r
 }
 
@@ -603,6 +609,6 @@ func DoXFace(xface string) string {
 	Color(1, "0,0,0,1")
 
 	PNGFaceURL(F)
-	return getBase64(string(0x89)+"PNG\r\n"+string(0x1a)+"\n"+strings.Join(png[:],""))
+	return DoBase64(string(0x89)+"PNG\r\n"+string(0x1a)+"\n"+strings.Join(png[:],""))
 	//return "data:image/png;base64," +  b64.StdEncoding.EncodeToString([]byte(string(0x89)+"PNG\r\n"+string(0x1a)+"\n"+strings.Join(png[:],""))) // this is not working
 }

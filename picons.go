@@ -11,7 +11,7 @@ var path = ""
 func SearchPicons(s string) []template.HTML {
 	var pBox []template.HTML
 	if s == "" {
-		pImg := `<img class="face" src="face/picons/misc/MISC/noface/face.gif" title="noface">`
+		pImg := `<img class="face" src="/face/picons/misc/MISC/noface/face.gif" title="noface">`
 		pBox = append(pBox, template.HTML(pImg))
 	} else {
 		atSign := strings.Index(s, "@")
@@ -23,7 +23,7 @@ func SearchPicons(s string) []template.HTML {
 			user := s[0:atSign]
 			host_pieces := strings.Split(host, ".")
 
-			pDef := `<img class="face" src="` + path + `face/picons/unknown/` + host_pieces[len(host_pieces)-1] + `/unknown/face.gif" title="` + host_pieces[len(host_pieces)-1] + `">`
+			pDef := `<img class="face" src="/` + path + `face/picons/unknown/` + host_pieces[len(host_pieces)-1] + `/unknown/face.gif" title="` + host_pieces[len(host_pieces)-1] + `">`
 			pBox = append(pBox, template.HTML(pDef))
 
 			for i := range mfPiconDatabases {
@@ -47,14 +47,14 @@ func SearchPicons(s string) []template.HTML {
 					piconPath += "face.gif"
 					if _, err := os.Stat(piconPath); err == nil {
 						if count == 0 {
-							pBox[0] = template.HTML(`<img class="face" src="` + path + piconPath + `"`)
+							pBox[0] = template.HTML(`<img class="face" src="/` + path + piconPath + `"`)
 							if strings.Contains(piconPath, "users") {
 								pBox[0] += template.HTML(` title="` + host_pieces[len(host_pieces)-1] + `">`)
 							} else {
 								pBox[0] += template.HTML(` title="` + host_pieces[l] + `">`)
 							}
 						} else {
-							pImg := `<img class="face" src="` + path + piconPath + `"`
+							pImg := `<img class="face" src="/` + path + piconPath + `"`
 							if strings.Contains(piconPath, "users") {
 								pImg += ` title="` + user + `">`
 							} else {
